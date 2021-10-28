@@ -1,0 +1,5 @@
+nome = input("Inserisci il tuo nome: ")
+#anni = int (input("Dimmi la tua etá: "))
+print(f"il tuo nome finisce comincia per {nome[0]}")
+print(f"il tuo nome finisce finisce per {nome[-1]}")
+print(f"la penultima lettera del tuo nome é {nome[-2]}")
