@@ -1,15 +1,17 @@
-def primo(num):
+def primo(numero):
     ok = True
-    for div in range(2,num-1):
-        if((num%div) == 0):
+    conto = numero-1    
+    while (ok == True) & (conto > 1):
+        if numero % conto == 0:
             ok = False
-    return ok
-numeriPrimi = []
-i=0
-numero = 0
-while(i <= 101):
-    if(primo(numero)):
-        numeriPrimi.append(numero)
-        i +=1
-    numero +=1
-print(numeriPrimi)
+        conto-=1
+    if conto == 0:
+        ok = False
+    return (ok)
+
+conta = 0
+for numero in range(1,1000):
+    if primo(numero) == True:
+        print(numero)
+        conta+=1
+print(f"i numeri primi da 1 a 1000 sono: {conta}")
