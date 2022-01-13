@@ -1,4 +1,4 @@
-#Scrivere un programma che data una lista ne stampi una sua permutazione casuale.
+2#Scrivere un programma che data una lista ne stampi una sua permutazione casuale.
 import random
 def doppie(l1,l2):
     for el in l1:

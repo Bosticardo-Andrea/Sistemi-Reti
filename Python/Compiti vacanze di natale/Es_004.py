@@ -1,4 +1,7 @@
 #made by Andrea Bosticardo
+"""
+Gioco forza 4
+"""
 import os #per pulire lo schermo dopo ogni turno
 import random
 def controllo(x,g,griglia,giocatori):
@@ -110,6 +113,7 @@ def vittoria(griglia):
 
     return vittoria      
 def main():#main
+    os.system("cls")
     griglia = {} #creo la griglia
     for k in range (6*7): #formatto la griglia
         griglia[k] = " "

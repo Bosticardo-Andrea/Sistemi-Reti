@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+//linguaggio C
 //legge il numero
 int leggiN(int n, char frase[]) {
     do {

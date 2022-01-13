@@ -16,3 +16,7 @@ def main():
 
 if __name__== "__main__":#richiamo il main
     main()
+
+"""
+if (k not in lista ) --< restituisce true se non e nella lista
+"""

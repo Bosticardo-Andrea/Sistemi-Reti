@@ -6,35 +6,15 @@ un programma scritto in C. Il programma deve leggere il file e:
 """
 def main():
     f = open("./main.c","r")
-    righe = f.readlines();
+    righe = f.readlines()
     f.close()
     nrighe = len(righe)
-    nprintf = 0
-    ncomm = 0
-    for parola in righe:
-        conta = 0
-        ok = False
-        nprint = ""
-        contac = 0
-        oks = False
-        comm = ""
-        for lettera in parola:
-            if((lettera == "p") | (ok == True)):
-                nprint += lettera
-                conta += 1
-                ok = True
-                if(conta == 6):
-                    ok = False
-            if((lettera == "/") | (oks == True)):
-                comm += lettera
-                contac += 1
-                oks = True
-                if(contac == 2):
-                    oks = False       
-        if(nprint == "printf"):
-            nprintf +=1
-        if(comm == "//"):
-            ncomm +=1
+    nprintf,ncomm = 0,0
+    for riga in righe:
+        if "printf" in riga:
+            nprintf+=1
+        if ("//" in riga) | ("/*" in riga):
+            ncomm += 1
     print(f"numero di righe: {nrighe}\nnumero di printf: {nprintf}\nnumero di commenti: {ncomm}")
 
 if __name__== "__main__":#richiamo il main

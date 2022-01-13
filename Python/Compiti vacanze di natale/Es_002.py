@@ -5,12 +5,14 @@ def creazionelista():
     for _ in range(n):
         l.append(input("Inserisci elemento: "))
     return l
-
+#compriension di dizionari --> dict = {x: elemento for k, elemento in enumerate(lista)}
 def main():
     lista = creazionelista()
     dict = {}
-    for k in range(len(lista)):
-        dict [k] = lista[k]
+    for k, elemento in enumerate(lista):#ho sia l'indice che l'elemento
+    #for k in range(len(lista)):
+        #dict [k] = lista[k]
+        dict[k] = elemento
     print(dict)
 
 if __name__== "__main__":#richiamo il main

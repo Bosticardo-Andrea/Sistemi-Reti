@@ -5,7 +5,6 @@ scelta e crea una lista contenente la serie storica del prezzo della tua
 spesa ottenuta sommando i prezzi dei generi alimentari scelti.
 Calcola mese / anno in cui la tua spesa ha costi minimi e massimi."""
 import random
-
 def separatore(tipologia,righe):
     posizione_alimento = {}
     i = 2
@@ -21,7 +20,6 @@ def separatore(tipologia,righe):
         el = elemento.split(";")
         anni[el[0]] = 0
     return anni,mesi,posizione_alimento
-
 def scelta(tipologia):
     print("Scegli un elemento: ")
     c = 0
@@ -38,26 +36,20 @@ def scelta(tipologia):
             val = (int (input(f"inserisi il {i} prodotto: ")))
         spesa.append(dizionario_prodotti[val])
     return spesa
-
 def main():
     f = open("./prezzi.csv","r")
     righe = f.readlines();
     f.close()
-
     tipologia = righe[0].split(";")
     tipologia.remove("anno")
     tipologia.remove("mese")
     frase = tipologia[-1]
     frase = frase.split("\n")
     tipologia[-1] = frase[0]
-
     anni,mesi,posizione_alimento = separatore(tipologia,righe)
     spesa = scelta(tipologia)
-
     mesiMax,mesiMin = mesi.copy(),mesi.copy()
     totSpesa = []
-
-
     print("Storico della spesa:")
     for elemento in righe[1::]: 
         el = elemento.split(";")
@@ -75,25 +67,33 @@ def main():
     for anno in anni:
         if(ok == True):
             annoMax,annoMin = anni[anno],anni[anno] 
+            nomeAmax, nomeAmin = anno,anno
             ok = False
         if(annoMax < anni[anno]):
             annoMax = anni[anno]
+            nomeAmax = anno
         if(annoMin > anni[anno]):
             annoMin = anni[anno]
+            nomeAmin = anno
     ok = True
+    nomeMmax,nomeMmin = "",""
     for mese in mesiMax:
         if(ok == True):
-            mMax = mese
-            mMin = mese
+            mMax = mesiMax[mese]
+            nomeMmax = mese
+            mMin = mesiMin[mese]
+            nomeMmin = mese
             ok = False
-        if(mMax < mese):
-            mMax = mese
-        if(mMin > mese):
-            mMin = mese
-    print(f"mese con la spesa maggiore {mMax}")   
-    print(f"mese con la spesa minore {mMin}") 
-    print(f"anno con la spesa maggiore {annoMax}")  
-    print(f"anno con la spesa minore {annoMin}")   
-
+        if(mMax < mesiMax[mese]):
+            mMax = mesiMax[mese]
+            nomeMmax = mese
+        if(mMin > mesiMin[mese]):
+            mMin = mesiMin[mese]
+            nomeMmin = mese
+        ok = False
+    print(f"mese con la spesa maggiore {nomeMmax} = {mMax}")   
+    print(f"mese con la spesa minore {nomeMmin} = {mMin}") 
+    print(f"anno con la spesa maggiore {nomeAmax} = {annoMax}")  
+    print(f"anno con la spesa minore {nomeAmin} = {annoMin}")   
 if __name__== "__main__":#richiamo il main
     main()
