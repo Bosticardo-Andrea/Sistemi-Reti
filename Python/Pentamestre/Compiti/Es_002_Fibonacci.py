@@ -11,7 +11,10 @@ def fibonacci(x):
 
 def main():
     num = int(input("Inserisci un numero: "))
-    print("fibonacci = ", fibonacci(num))
+    x = 1
+    while(fibonacci(x) < num):
+        print(fibonacci(x))
+        x += 1
 
 if __name__=="__main__":
     main()

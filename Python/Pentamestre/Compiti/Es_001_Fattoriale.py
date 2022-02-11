@@ -8,7 +8,6 @@ def fattoriale(x):
     else:
         return(x*(fattoriale(x -1)))
     
-
 def main():
     num = int(input("Inserisci un numero: "))
     print(f"Il fattoriale di {num} é: {fattoriale(num)}")
