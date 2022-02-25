@@ -28,33 +28,35 @@ def controlloIP(ip,mask):
         i+=1
     if (ok != False):
         ip = IP_dec2bin(ip).split(".")
-        listSub=[elmento for k,elmento in enumerate("".join(ip)[::-1]) if(k<mask)]
+        listSub=[elmento for k,elmento in enumerate("".join(ip)[::-1]) if(k<32-mask)]
         if "1" in listSub: 
             ok = False
     return ok
 def trasformaSub(mask):
     maschera = ""
-    if(isinstance(mask, int) == False):
-        if(mask[0] == "/"):
-            maschera = mask[1:]
+    if(mask[0] == "/"):
+        maschera = mask[1:]
+    elif(mask.isdigit() == True):
+        maschera = int(mask)
+    else:
+        if(mask[:3] == "255"):
+            mask = IP_dec2bin(mask).split(".")
+            mask = "".join(mask)
         else:
             mask = mask.split(".")
             mask = "".join(mask)
-            ok,i = False,0,
-            while (i < len(mask)) & (ok == False):
-                if mask[i] == "0":
-                    ok = True
+        ok,i = False,0,
+        while (i < len(mask)) & (ok == False):
+            if mask[i] == "0":
+                ok = True
                 i+=1
-            maschera = i-1
-    else:
-        if mask < 0 | mask > 32:
-            maschera = None
-        else:
-            maschera = mask      
+        maschera = i-1      
     return int(maschera)
 def richieste():
     ip = input("Inserisci IP in modalitá decimale puntata: ")
+    #subnet = trasformaSub(input("Inserisci la subnet mask /n: "))
     subnet = trasformaSub(input("Inserisci la subnet mask /n: "))
+    print(subnet)
     while controlloIP(ip,subnet) == False:
         ip = input("IP errato!!\nRinserisci: ")
     return ip,subnet
