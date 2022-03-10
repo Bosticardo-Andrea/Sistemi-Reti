@@ -1,26 +1,31 @@
-"""
-0 1 2 x
-x 3 4 x
-5 6 7 8 
-x x x 9
-"""
+#created by Andrea Bosticardo
+from cmath import rect
 from random import randint
 import sys,pygame,random,math
-def disegnaGriglia(r,c):
+def disegnaGriglia(r,c,mappa):#disegno la griglia con pygame
     while(True):
         size = (500,500)
-        BLACK = (0, 0, 0)
-        WHITE = (255, 255, 255)
+        BLACK,WHITE,RED,GREEN = (0, 0, 0),(255, 255, 255),(128,0,0),(0, 255, 0)
         pygame.init()
         screen = pygame.display.set_mode(size)
-        screen.fill(WHITE)
+        screen.fill(BLACK)
         area = ((size[0]**2)/(r*c))
-        lato = math.sqrt(area)-4
+        lato = math.sqrt(area)-2
         y = r*c/4
-        for _ in range(c):
+        fnt = pygame.font.SysFont("Times New Roman", 12)
+        for i in range(c):
             x = r*c/4
-            for _ in range(r):
-                pygame.draw.rect(screen, BLACK, (x, y, lato, lato), 2)
+            for k in range(r):
+                if(mappa[i][k] == -1):
+                    pygame.draw.rect(screen, BLACK, (x, y, lato, lato),1)
+                    pygame.draw.rect(screen, RED, (x, y, lato-3, lato-3))
+                    surf_text = fnt.render("X", True, BLACK)
+                    screen.blit(surf_text,(x+2,y+2))
+                else: 
+                    pygame.draw.rect(screen, BLACK, (x, y, lato, lato),1)
+                    pygame.draw.rect(screen, GREEN, (x, y, lato-3, lato-3))
+                    surf_text = fnt.render(str(mappa[i][k]), True, BLACK)
+                    screen.blit(surf_text,(x+2,y+2))
                 x += lato-2
             y += lato-2
         for event in pygame.event.get():
@@ -39,12 +44,10 @@ def creaDiz(mappa):
     return adiacenze,mappa
 def creaMappa():
     r = randint(3,10)
-    c=r
-    mappa = [celle(c) for i in range(r)]
-    return mappa,r,c 
+    mappa = [celle(r) for _ in range(r)]
+    return mappa,r,r
 def celle(c):
-    x = [0,-1]
-    y = [random.choice(x) for i in range(c)]
+    y = [random.choice([0,-1,0]) for _ in range(c)]
     return y
 def stampaMappa(mappa):
     for x in mappa:
@@ -69,12 +72,11 @@ def adiacenza(mappa,adiacenze):
     return adiacenze
 def main():
     mappa,r,c = creaMappa()
-    #print(mappa)
     #mappa = [[0,0,0,1],[1,0,0,1],[0,0,0,0],[1,1,1,0]]
     adiacenze,mappa = creaDiz(mappa)
     stampaMappa(mappa)
     adiacenze = adiacenza(mappa,adiacenze)
     print(f"possibili mosse:\n {adiacenze}")  
-    disegnaGriglia(r,c) 
+    disegnaGriglia(r,c,mappa) 
 if __name__=="__main__":
     main()
