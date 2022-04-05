@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 def main():
-    import matplotlib.pyplot as plt
     f = open("dati.csv","r")
     righe = f.readlines()
     f.close()
