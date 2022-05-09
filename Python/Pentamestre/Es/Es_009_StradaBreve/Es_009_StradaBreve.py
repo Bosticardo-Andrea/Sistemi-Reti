@@ -14,27 +14,33 @@ def disegnaGriglia(r,c,mappa,adiacenze):#disegno la griglia con pygame
         fnt = pygame.font.SysFont("Times New Roman", 12)
         for i in range(c):
             text = fnt.render(str(i), True, (255,255,255))
-            screen.blit(text,(25,y+( )))
+            screen.blit(text,(25,y))
             for k in range(r):
                 text = fnt.render(str(k), True, (255,255,255))
                 screen.blit(text,(x+(lato/2),25))
+                rettangoloNero = [screen, BLACK, (x, y, lato, lato),1] 
+                rettangoloVerde = [screen, GREEN, (x+1, y+1, lato-2, lato-2)] 
+                rettangoloRosso = [screen, RED, (x+1, y+1, lato-2, lato-2)]
                 if(mappa[i][k] == -1):
-                    pygame.draw.rect(screen, RED, (x+1, y+1, lato-2, lato-2))
-                    pygame.draw.rect(screen, BLACK, (x, y, lato, lato),1)
+                    pygame.draw.rect(*rettangoloRosso)
+                    pygame.draw.rect(*rettangoloNero)
                     surf_text = fnt.render("X", True, BLACK)
                     screen.blit(surf_text,(x+4,y+4))
                 else: 
-                    pygame.draw.rect(screen, GREEN, (x+1, y+1, lato-2, lato-2))
-                    pygame.draw.rect(screen, BLACK, (x, y, lato, lato),1)
+                    pygame.draw.rect(*rettangoloVerde)
+                    pygame.draw.rect(*rettangoloNero)
                     surf_text = fnt.render(str(mappa[i][k]), True, BLACK)
                     screen.blit(surf_text,(x+4,y+4))
                 x += lato-2
             y += lato-3
             x = 50
+            disPalla = [mappa,adiacenze,lato,screen]
         if ok : 
-            palla,mappaPalla,coordinate = disegnaPalla(mappa,adiacenze,lato,screen)
+            palla,mappaPalla,coordinate = disegnaPalla(*disPalla)
             ok = False
-        else: mappaPalla,coordinate = muoviPalla(mappaPalla,palla,screen,lato,adiacenze,mappa,coordinate)
+        else: 
+            muovi = [mappaPalla,palla,screen,lato,adiacenze,mappa,coordinate]
+            mappaPalla,coordinate = muoviPalla(*muovi)
         pygame.display.flip()
         
 def controlloMovimento(mappaPalla,palla,adiacenze,lato,mappa,n,num,coordinata,segno,coordinate):
@@ -62,17 +68,18 @@ def muoviPalla(mappaPalla,palla,screen,lato,adiacenze,mappa,coordinate):
             if x == -2:
                 n = mappa[k][i]
                 break
+    controllo = [mappaPalla,palla,adiacenze,lato,mappa,n]
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
         if event.type == pygame.KEYDOWN: 
             if event.__dict__["unicode"] == "a":
-                mappaPalla,coordinate = controlloMovimento(mappaPalla,palla,adiacenze,lato,mappa,n,0,True,True,coordinate)#mappa della palla, ogetto palla,dizionario delle adiacenze, lunghezza del lato, mappa , posizione palla nella mappa, True = coordinata x, True = meno
+                mappaPalla,coordinate = controlloMovimento(*controllo,0,True,True,coordinate)#mappa della palla, ogetto palla,dizionario delle adiacenze, lunghezza del lato, mappa , posizione palla nella mappa, True = coordinata x, True = meno
             if event.__dict__["unicode"] == "w":
-                mappaPalla,coordinate = controlloMovimento(mappaPalla,palla,adiacenze,lato,mappa,n,3,False,True,coordinate)
+                mappaPalla,coordinate = controlloMovimento(*controllo,3,False,True,coordinate)
             if event.__dict__["unicode"] == "s":
-                mappaPalla,coordinate = controlloMovimento(mappaPalla,palla,adiacenze,lato,mappa,n,2,False,False,coordinate)
+                mappaPalla,coordinate = controlloMovimento(*controllo,2,False,False,coordinate)
             if event.__dict__["unicode"] == "d":
-                mappaPalla,coordinate = controlloMovimento(mappaPalla,palla,adiacenze,lato,mappa,n,1,True,False,coordinate)
+                mappaPalla,coordinate = controlloMovimento(*controllo,1,True,False,coordinate)
     pygame.draw.circle(screen,(0,0,255),coordinate,palla.height/2)
     return mappaPalla,coordinate
 def disegnaPalla(mappa,adiacenze,lato,screen):
