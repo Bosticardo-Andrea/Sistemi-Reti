@@ -1,4 +1,3 @@
-from random import randrange
 from threading import Thread
 import time
 #ereditarietá
