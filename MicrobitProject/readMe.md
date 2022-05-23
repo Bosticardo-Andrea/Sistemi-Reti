@@ -7,8 +7,8 @@
 To be able to view it is enough to have the notepad, better [Visual Studio Code](https://code.visualstudio.com/Download).
 
 ## setup:
-- [] Computer
-- [] [Microbit](https://www.microbit.org/) 
+- Computer
+- [Microbit](https://www.microbit.org/) 
 
 Instead, to run the code, you need to install Python [3.10](https://www.python.org/downloads/)
 ## modules used:
@@ -26,3 +26,5 @@ All modules can be downloaded via the following command, enter the command on a 
 command: **"pip install name"**, substitute the module name for "name"
 
 ## What does it do:
+
+#contributor: 
