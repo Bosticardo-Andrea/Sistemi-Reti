@@ -1,8 +1,9 @@
 #made by bosticardo
-from multiprocessing import connection
 import socket,os,time,pygame,sys,serial
+from tkinter.tix import Tree
 import serial.tools.list_ports
 from threading import Thread
+import tkinter as tk 
 class Coda():
     def __init__(self):
         self.coda=[]
@@ -19,7 +20,7 @@ coda = Coda()
 class MyThread(Thread):
     def __init__(self,griglia,g1,g2,giocatori,connect):
         Thread.__init__(self)
-        self.runnig = True
+        self.running = True
         self.griglia = griglia
         self.g1 = g1
         self.g2 = g2
@@ -38,7 +39,7 @@ class MyThread(Thread):
         fnt = pygame.font.SysFont("Times New Roman", 110)
         fnt3 = pygame.font.SysFont("Times New Roman", 50)
         screen = pygame.display.set_mode(size)
-        while self.runnig:
+        while self.running:
             screen.fill((255,255,255))
             pygame.draw.rect(screen,(0,0,0),(130,10,5,380))
             pygame.draw.rect(screen,(0,0,0),(265,10,5,380))
@@ -75,39 +76,38 @@ class MyThread(Thread):
             if (mossa[0] == "m") and (self.ok):
                 m = self.posizione
                 m = controllo(m,self.g1,self.griglia,self.giocatori)
-                self.connect.sendall(str(m).encode())
-                self.ok = False
+                if m != None:
+                        self.connect.sendall(str(m).encode())
+                        self.ok = False
             #print(self.posizione)
             if self.tipo != None:
                 if self.tipo == 3:
                     pygame.draw.rect(screen,(255,255,255),(0,400,400,75),0)
                     risultato = fnt3.render("Pareggio", True, (0,0,0))
-                if self.tipo == 1:
+                if self.tipo == 2:
                     pygame.draw.rect(screen,(255,255,255),(0,400,400,75),0)
                     pygame.draw.line(screen, (0,0,0), self.inizio, self.end, 10)
                     risultato = fnt3.render(f"Hai perso:", True, (255,0,0))
-                if self.tipo == 2:
+                if self.tipo == 1:
                     pygame.draw.rect(screen,(255,255,255),(0,400,400,75),0)
                     pygame.draw.line(screen, (0,0,0), self.inizio, self.end, 10)
                     risultato = fnt3.render(f"Hai vinto", True, (0,255,0))
                 screen.blit(risultato, (10,400)) 
             pygame.draw.rect(screen,(255,0,0),(self.dizioCoordinate[self.posizione][0]-35,self.dizioCoordinate[self.posizione][1]-35,100,100),2)
             pygame.display.flip() 
-    def stop(self,tipo):
-        self.tipo = tipo
     def linea(self,s,e):
         self.inizio,self.end = self.dizioCoordinate[s],self.dizioCoordinate[e]
 
 class MyThread2(Thread):
     def __init__(self):
         Thread.__init__(self)
-        self.runnig = True
+        self.running = True
     def run(self):
         
         port,microbit = self.letturaPorte()
         while(port == None): 
             port,microbit = self.letturaPorte()
-        while self.runnig:
+        while self.running:
             data = microbit.readline().decode()
             if(data != ""): 
                 coda.enqueue(data[:-1])
@@ -117,11 +117,43 @@ class MyThread2(Thread):
             #print("{}: {} [{}]".format(port, desc, hwid))
             break
         if ports == []:  port = None
-        else: microbit = serial.Serial(port=port, baudrate=115200, timeout=1)
+        else: 
+            #microbit = serial.Serial(port=port, baudrate=115200, timeout=1)
+            microbit = serial.Serial(port="COM8", baudrate=115200, timeout=1)
         return ports,microbit
     def stop(self):
-        self.runnig = False
-
+        self.running = False
+class GUI(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.geometry('450x200')
+        self.title("Nome")
+        self.grid_columnconfigure(0, weight=1)
+        self.textwidget = tk.Text()
+        self.text_input = tk.Entry()
+        self.name = None
+        self.crea()
+    def crea(self):
+        welcome_label = tk.Label(self,
+                                    text="Inserisci il tuo nome",
+                                    font=("Helvetica", 15))
+        welcome_label.grid(row=0, column=0, sticky="WE", padx=10, pady=10)                       
+        self.text_input.grid(row=1, column=0, sticky="WE", padx=10)
+        self.textwidget.insert(tk.END, "Inserire il nome, poi chiudere la finestra\n")
+        self.textwidget.grid(row=3, column=0, sticky="WE", padx=10, pady=10)
+        download_button = tk.Button(text="Enter", command=self.nome)
+        download_button.grid(row=1, column=1, sticky="WE", pady=10, padx=10)
+    def nome(self,):
+        if self.text_input.get():
+            user_input = self.text_input.get()
+            nome = user_input
+            self.name = user_input
+            print(self.name)
+        else:
+            nome = "Inserire il nome, poi chiudere la finestra\n"
+        self.textwidget.delete (1.0,"end")
+        self.textwidget.insert(tk.END, nome)
+        self.textwidget.grid(row=3, column=0, sticky="WE", padx=10, pady=10)
 
 def connessione():
     s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -135,10 +167,11 @@ def controllo(x,g,griglia,giocatori):
     """Si effettua il controllo del numero inserito:
     - Nel caso la cella sia occupata
     - Nel caso il numero non si corretto < 0 o > 8"""
-    while((griglia[x] != " ")):       
+    if((griglia[x] == " ")):       
         print("Cella occupata")
-        x = int(input("Inserici mossa:"))
-    griglia[x] = giocatori[g]   
+        #x = int(input("Inserici mossa:"))
+        x = None
+    else: griglia[x] = giocatori[g]   
     return x
 def disegnaGriglia(griglia,giocatori,g1,g2):
     """Disegno la griglia con i giocatori che si sfidano"""
@@ -176,12 +209,15 @@ def vittoria(griglia,disegno):
     elif(( griglia[2]==griglia[4]==griglia[6]) & (griglia[2]!=" ")):
         disegno.linea(2,6)
         vittoria = True
-    return vittoria   
+    return vittoria  
 def main():
+    app = GUI()
+    app.mainloop()
+    G1 = app.name
+    #inserisciNome.start()
     griglia = {0: " ", 1: " ",2: " ",3: " ",4: " ",5: " ",6: " ",7: " ",8: " "}
-    #connect,address = connessione()
-    connect = "COM6"
-    G1 = input("Inserisci Giocatore1[X]: ")
+    connect,address = connessione()
+    #G1 = input("Inserisci Giocatore1[X]: ")e
     connect.sendall(G1.encode())
     G2 = connect.recv(4096).decode()
     giocatori = {G1:"X",G2:"O"}
@@ -200,9 +236,14 @@ def main():
         #connect.sendall(str(m).encode())
         os.system('cls')
         disegnaGriglia(griglia,giocatori,G1,G2)
-        if(vittoria(griglia,disegno)):
-            print(f"Ha vinto {G1}")
-            disegno.tipo = 1
+        ric = True
+        while disegno.ok == True:
+            if(vittoria(griglia,disegno)):
+                print(f"Ha vinto {G1}")
+                disegno.tipo = 1
+                ric = False
+                break
+        if ric == False:
             break
         if(conta <= 8): 
             conta += 1
@@ -227,6 +268,8 @@ def main():
             break 
     movimento.stop()
     movimento.join()
-
+    time.sleep(3)
+    disegno.running = False
+    disegno.join()
 if __name__=="__main__":
-    main()
+    main() 
