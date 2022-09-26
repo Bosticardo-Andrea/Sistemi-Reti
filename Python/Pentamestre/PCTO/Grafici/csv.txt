@@ -1,8 +1,0 @@
-mese,mese_n,ore_studio_giornaliere,media_voti_mese
-settembre,9,2,8
-ottobre,10,3,7.3
-novembre,11,3,7
-dicembre,12,4,8.5
-gennaio,1,2,6
-febbraio,2,3,7.3
-marzo,3,2,8.6
