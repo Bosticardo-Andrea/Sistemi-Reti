@@ -44,6 +44,5 @@ def main():
     if int(numero/2) < 10**6:print(trovaFattori(numero,lista))
     else:print(trovaFattoriAlti(numero,lista))
     print(f"Tempo di esecuzione = {time.time()-start}")
-
 if __name__== "__main__":
     main()
