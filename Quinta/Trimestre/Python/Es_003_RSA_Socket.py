@@ -1,4 +1,3 @@
-from multiprocessing.resource_sharer import stop
 import socket
 import Es_002_ClassRSA
 rsa = Es_002_ClassRSA.RSA()
